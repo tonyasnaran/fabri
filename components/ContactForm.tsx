@@ -65,7 +65,7 @@ export default function ContactForm() {
       >
         <CheckCircle className="text-[#722F37]" size={48} />
         <h3 className="text-white text-2xl font-display font-bold">Message received.</h3>
-        <p className="text-white/50 text-sm">I'll be in touch within 48 hours.</p>
+        <p className="text-white/50 text-sm">I&apos;ll be in touch within 48 hours.</p>
         <button
           onClick={() => setSubmitted(false)}
           className="mt-4 text-xs text-white/40 hover:text-white/70 underline underline-offset-4 transition-colors"

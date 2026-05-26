@@ -88,7 +88,7 @@ export default function Home() {
           <AnimatedSection className="max-w-3xl">
             <div className="text-[#722F37] text-xs tracking-[0.3em] uppercase mb-4">Who I Am</div>
             <p className="text-white/60 text-2xl md:text-3xl font-display leading-relaxed">
-              I'm{" "}
+              I&apos;m{" "}
               <span className="text-white font-bold">Anthony Fabri</span> — a builder, connector, operator, and creative based in LA.
             </p>
             <p className="text-white/40 mt-6 text-base leading-relaxed max-w-xl">

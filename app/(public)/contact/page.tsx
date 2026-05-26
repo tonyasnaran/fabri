@@ -12,7 +12,7 @@ export default function ContactPage() {
           <div className="text-[#722F37] text-xs tracking-[0.3em] uppercase mb-4">Get in Touch</div>
           <h1 className="text-6xl md:text-7xl font-display font-black text-white">Contact</h1>
           <p className="text-white/40 text-lg mt-4 max-w-md">
-            Let's build something together. I respond within 48 hours.
+            Let&apos;s build something together. I respond within 48 hours.
           </p>
         </AnimatedSection>
 

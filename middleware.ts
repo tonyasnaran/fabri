@@ -2,12 +2,36 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  // Only guard dashboard routes — public pages never enter this middleware
+  // (matcher below is intentionally narrow)
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+  // Dev escape hatch: BYPASS_AUTH=true skips Supabase entirely
+  if (process.env.BYPASS_AUTH === "true") {
+    return NextResponse.next({ request });
+  }
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  // If Supabase is not configured (missing or placeholder), redirect to login
+  // rather than crashing with MIDDLEWARE_INVOCATION_FAILED
+  const supabaseConfigured =
+    supabaseUrl &&
+    supabaseAnonKey &&
+    !supabaseUrl.includes("placeholder") &&
+    supabaseUrl.startsWith("https://");
+
+  if (!supabaseConfigured) {
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // Supabase is configured — check the session
+  try {
+    let supabaseResponse = NextResponse.next({ request });
+
+    const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
       cookies: {
         getAll() {
           return request.cookies.getAll();
@@ -22,28 +46,29 @@ export async function middleware(request: NextRequest) {
           );
         },
       },
+    });
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      const loginUrl = request.nextUrl.clone();
+      loginUrl.pathname = "/login";
+      return NextResponse.redirect(loginUrl);
     }
-  );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const isDashboard = request.nextUrl.pathname.startsWith("/dashboard");
-
-  // Auth guard — set BYPASS_AUTH=true in .env.local to skip during local dev
-  const bypassAuth = process.env.BYPASS_AUTH === "true";
-  if (isDashboard && !user && !bypassAuth) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+    return supabaseResponse;
+  } catch {
+    // Auth check failed (network error, bad token, etc.)
+    // Redirect to login rather than surfacing a 500
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = "/login";
+    return NextResponse.redirect(loginUrl);
   }
-
-  return supabaseResponse;
 }
 
 export const config = {
-  matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
+  // Only protect /dashboard routes — never run on public pages or static assets
+  matcher: ["/dashboard", "/dashboard/:path*"],
 };

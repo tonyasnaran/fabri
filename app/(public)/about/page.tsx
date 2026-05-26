@@ -75,14 +75,14 @@ export default function AboutPage() {
               <div className="text-[#722F37] text-xs tracking-widest uppercase mb-3">Current Focus</div>
               <div className="text-white font-display text-xl font-bold">DEROS + FLUX</div>
               <p className="text-white/40 text-sm mt-2">
-                Building the DEROS membership product and scaling FLUX CULTURE's media presence.
+                Building the DEROS membership product and scaling FLUX CULTURE&apos;s media presence.
               </p>
             </div>
             <div>
               <div className="text-[#722F37] text-xs tracking-widest uppercase mb-3">Based In</div>
               <div className="text-white font-display text-xl font-bold">Los Angeles</div>
               <p className="text-white/40 text-sm mt-2">
-                Operating across LA's entrepreneurship, nightlife, and content scenes.
+                Operating across LA&apos;s entrepreneurship, nightlife, and content scenes.
               </p>
             </div>
           </div>

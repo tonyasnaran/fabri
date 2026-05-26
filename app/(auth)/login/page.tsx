@@ -103,7 +103,7 @@ export default function LoginPage() {
         </form>
 
         <p className="text-center text-white/30 text-xs mt-8">
-          Don't have access?{" "}
+          Don&apos;t have access?{" "}
           <Link href="/signup" className="text-white/50 hover:text-white underline underline-offset-4 transition-colors">
             Request access
           </Link>
